@@ -2,6 +2,7 @@ const express = require("express")
 const app = express()
 const mongoose = require("mongoose")
 const session = require("express-session")
+const MongoStore = require("connect-mongo")
 require("dotenv").config()
 const connect = require("./Database/db.connect")
 const todorouter = require("./routes/todo.routes")
@@ -10,13 +11,29 @@ app.set("view engine", "ejs")
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
 
-// Session middleware
+// Session middleware with MongoDB store (production) or MemoryStore (development)
+const mongoUrl = process.env.MONGODB_URI
+let sessionStore
+
+if (mongoUrl) {
+  // Use MongoDB store in production
+  sessionStore = new MongoStore({
+    mongoUrl: mongoUrl,
+    touchAfter: 24 * 3600 // lazy session update interval
+  })
+} else {
+  // Use default MemoryStore in development (sessions won't persist across restarts)
+  sessionStore = new session.MemoryStore()
+}
+
 app.use(session({
   secret: process.env.SESSION_SECRET || "your-secret-key",
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
+  store: sessionStore,
   cookie: { 
-    secure: false,  // Set to true if using HTTPS
+    secure: process.env.NODE_ENV === "production",  // true in production
+    httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24  // 24 hours
   }
 }))
