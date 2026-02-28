@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f6;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background: #212529;
+            color: white;
+        }
+
+        .nav-link {
+            color: #adb5bd;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: white;
+            background: #343a40;
+            border-radius: 5px;
+        }
+
+        .stat-card {
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-3">
+                <h4 class="text-center mb-4 text-primary">DevApp</h4>
+                <ul class="nav flex-column gap-2">
+                    <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                    <li class="nav-item mt-5"><a class="nav-link text-danger" href="/login">Logout</a></li>
+                </ul>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Welcome, <%= typeof name !=='undefined' ? name : 'User' %>!</h1>
+                    <span class="badge bg-success">Online</span>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card stat-card bg-primary text-white p-3">
+                            <div class="card-body">
+                                <h6>Total Projects</h6>
+                                <h2 class="fw-bold">12</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stat-card bg-dark text-white p-3">
+                            <div class="card-body">
+                                <h6>Notifications</h6>
+                                <h2 class="fw-bold">5</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stat-card bg-info text-white p-3">
+                            <div class="card-body">
+                                <h6>System Health</h6>
+                                <h2 class="fw-bold">98%</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 shadow-sm border-0">
+                    <h5 class="mb-3">Recent Activity</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Login Attempt</td>
+                                    <td><span class="badge bg-success">Success</span></td>
+                                    <td>Just now</td>
+                                </tr>
+                                <tr>
+                                    <td>Profile Update</td>
+                                    <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                    <td>2 hours ago</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

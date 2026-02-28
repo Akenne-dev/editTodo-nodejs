@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #4A3C2E 0%, #6B5D4F 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(74, 60, 46, 0.4);
+            width: 100%;
+            max-width: 550px;
+            padding: 45px;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #4A3C2E;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        h1::before {
+            content: "✏️";
+            font-size: 36px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6B5D4F;
+            font-size: 14px;
+            margin-bottom: 35px;
+            font-weight: 500;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #4A3C2E;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #E5DDD5;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #FAFAF8;
+            color: #4A3C2E;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4A3C2E;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(74, 60, 46, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]::placeholder {
+            color: #A39485;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 35px;
+        }
+
+        button[type="submit"] {
+            flex: 1;
+            padding: 16px;
+            background: #4A3C2E;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        button[type="submit"]:hover {
+            background: #3A2C1E;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(74, 60, 46, 0.3);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(-1px);
+        }
+
+        .back-btn {
+            flex: 1;
+            padding: 16px;
+            background: white;
+            color: #4A3C2E;
+            border: 2px solid #4A3C2E;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .back-btn:hover {
+            background: #4A3C2E;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(74, 60, 46, 0.2);
+        }
+
+        .back-btn:active {
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 30px 25px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            h1::before {
+                font-size: 32px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+                margin-bottom: 30px;
+            }
+
+            input[type="text"] {
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+
+            button[type="submit"],
+            .back-btn {
+                padding: 14px;
+                font-size: 13px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h1::before {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Task</h1>
+        <p class="subtitle">Make changes to your task</p>
+        
+        <form action="/edit-todo/<%= todo._id %>" method="post">
+            <div class="form-group">
+                <label for="title">Task Title</label>
+                <input type="text" id="title" name="title" value="<%= todo.title %>" placeholder="Enter task title..." required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description" value="<%= todo.description %>" placeholder="Add task details...">
+            </div>
+            
+            <div class="button-group">
+                <button type="submit">Save Changes</button>
+                <a href="/todo" class="back-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
