@@ -297,13 +297,145 @@
                 font-size: 13px;
             }
         }
+
+        /* Logout Button Styling */
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #fee;
+            color: #e53e3e;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .logout-btn:hover {
+            background: #e53e3e;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+        }
+
+        .logout-btn:active {
+            transform: scale(1.05);
+        }
+
+        /* Confirmation Modal Styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            color: #e53e3e;
+        }
+
+        .modal-header svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #2d3748;
+        }
+
+        .modal-body {
+            color: #4a5568;
+            margin-bottom: 24px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn-cancel {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #cbd5e0;
+        }
+
+        .modal-btn-confirm {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .modal-btn-confirm:hover {
+            background: #c53030;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h1> My Tasks</h1>
-            <a href="/logout" style="color: #667eea; text-decoration: none; font-weight: 600; padding: 8px 16px; border: 2px solid #667eea; border-radius: 6px; transition: all 0.3s ease;" onmouseover="this.style.background='#667eea'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#667eea';">Logout</a>
+            <a href="#" onclick="confirmLogout(event)" class="logout-btn" title="Logout">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </a>
         </div>
         <p class="subtitle">Stay organized and productive</p>
         
@@ -356,5 +488,55 @@
             </ul>
         <% } %>
     </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <h3>Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to logout? Your session will end and you'll need to login again.
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+                <button class="modal-btn modal-btn-confirm" onclick="doLogout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault();
+            document.getElementById('logoutModal').classList.add('active');
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('active');
+        }
+
+        function doLogout() {
+            window.location.href = '/logout';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('logoutModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeLogoutModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeLogoutModal();
+            }
+        });
+    </script>
 </body>
 </html>

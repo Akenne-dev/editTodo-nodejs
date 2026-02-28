@@ -158,7 +158,7 @@ app.get("/login", (req, res) => {
   } catch (e) {
     console.log("Session check error on /login:", e.message)
   }
-  res.render('login'); 
+  res.render('login', { error: null }); 
 });
 
 app.get("/logout", (req, res) => {
@@ -189,7 +189,8 @@ app.post("/usersLogin", async (req,res)=>{
     req.session.username = find.username
     res.redirect("/todo")
   } else {
-    res.send("user not found")
+    // Render login page with professional error message
+    res.render("login", { error: "User not found. Please check your credentials." })
   }
 
 })

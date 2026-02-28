@@ -175,6 +175,43 @@
                 padding: 20px;
             }
         }
+
+        /* Error Alert Styling */
+        .error-alert {
+            background: #fee;
+            border-left: 4px solid #e53e3e;
+            color: #c53030;
+            padding: 16px 20px;
+            margin: 20px 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 2px 8px rgba(229, 62, 62, 0.1);
+        }
+
+        .error-alert i {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .error-alert p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -184,6 +221,14 @@
                 <h1>Welcome Back</h1>
                 <p>Sign in to manage your tasks</p>
             </div>
+            
+            <% if (error) { %>
+                <div class="error-alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p><%= error %></p>
+                </div>
+            <% } %>
+            
             <form class="login-body" action="/usersLogin" method="POST">
                 <div class="form-group">
                     <label for="email">Email Address</label>
