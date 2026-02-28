@@ -48,6 +48,11 @@ app.use(session({
 
 app.use("/", todorouter)
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({ status: "✅ App is running", timestamp: new Date() })
+})
+
 // CRUD?
 // CREATE READ UPDATE DELETE
 const userSchema = new mongoose.Schema({
@@ -61,12 +66,16 @@ const usermodel = mongoose.model("user-collection", userSchema)
 
 
 app.get("/",( req,res)=>{
-  // If already logged in, go to todos
-  if (req.session && req.session.userId) {
-    return res.redirect("/todo")
+  try {
+    // If already logged in, go to todos
+    if (req.session && req.session.userId) {
+      return res.redirect("/todo")
+    }
+  } catch (e) {
+    console.log("Session check error on /:", e.message)
   }
-  // Otherwise, show signup page
-  res.redirect("/signup")
+  // Render signup page directly
+  res.render('signup')
 })
 
 let todos = []
@@ -113,8 +122,12 @@ app.get("/home",(req, res)=>{
 
 
 app.get("/signup",(req,res)=>{
-  if (req.session && req.session.userId) {
-    return res.redirect("/todo")
+  try {
+    if (req.session && req.session.userId) {
+      return res.redirect("/todo")
+    }
+  } catch (e) {
+    console.log("Session check error on /signup:", e.message)
   }
   res.render('signup')
 })
@@ -158,8 +171,12 @@ app.post("/user/signup", async (req, res)=>{
 })
 
 app.get("/login", (req, res) => {
-  if (req.session.userId) {
-    return res.redirect("/todo")
+  try {
+    if (req.session && req.session.userId) {
+      return res.redirect("/todo")
+    }
+  } catch (e) {
+    console.log("Session check error on /login:", e.message)
   }
   res.render('login'); 
 });
@@ -195,6 +212,13 @@ app.post("/usersLogin", async (req,res)=>{
     res.send("user not found")
   }
 
+})
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error("❌ Error:", err.message)
+  console.error(err.stack)
+  res.status(500).send("Something went wrong: " + err.message)
 })
 
 // Start server
