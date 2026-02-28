@@ -8,13 +8,14 @@ const gettodopage = async(req, res)=>{
     try {
          const userId = req.userId;
          if (!userId) {
+           console.log("No user ID found, redirecting to login");
            return res.redirect("/login");
          }
          const todos = await todomodel.find({ userId: userId });
          res.render('todo', { todos }); 
     } catch (error) {
-       console.log(error);
-        
+       console.log("Error in gettodopage:", error);
+       res.send("Error loading todos");
     }
 
 }

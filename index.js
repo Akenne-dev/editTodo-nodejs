@@ -7,7 +7,8 @@ const todorouter = require("./routes/todo.routes")
 const { setCurrentUser, getCurrentUser } = require("./context/userContext")
 
 app.set("view engine", "ejs")
-app.use(express.urlencoded())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static("public"))
 app.use("/", todorouter)
 
 // CRUD?
@@ -23,12 +24,8 @@ const usermodel = mongoose.model("user-collection", userSchema)
 
 
 app.get("/",( req,res)=>{
-  res.send("Welcome to node class")
+  res.redirect("/todo")
 })
-
-app.get('/', (req, res) => {
-  res.send('Hello, World! Your server is working.');
-});
 
 let todos = []
 const users = []
@@ -125,15 +122,6 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-
-
-connect()
-const port = process.env.PORT || 8004
-app.listen(port,()=>{
-console.log(`server is on port ${port}`);
-
-})
-
 app.post("/usersLogin", async (req,res)=>{
   const { email, password } = req.body
 
@@ -158,6 +146,14 @@ app.post("/usersLogin", async (req,res)=>{
   } else {
     res.send("user not found")
   }
+
+})
+
+// Start server
+connect()
+const port = process.env.PORT || 8004
+app.listen(port,()=>{
+console.log(`server is on port ${port}`);
 
 })
 
