@@ -1,15 +1,15 @@
 const express = require("express")
 const todorouter = express.Router()
 const {gettodopage,Addtodo,deletetodo, updatetodo, edittodo,updateedittodo} = require("../controller/todo.controller")
-const { getCurrentUser } = require("../context/userContext")
 
-// Middleware to attach userId to request
+// Middleware to attach userId to request - PROTECTED ROUTE
 const userMiddleware = (req, res, next) => {
-  const currentUser = getCurrentUser();
-  if (currentUser) {
-    req.userId = currentUser._id;
+  if (req.session.userId) {
+    req.userId = req.session.userId;
+    next();
+  } else {
+    res.redirect("/login");
   }
-  next();
 }
 
 todorouter.use(userMiddleware)

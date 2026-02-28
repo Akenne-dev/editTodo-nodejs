@@ -7,10 +7,6 @@ const bcrypt = require("bcryptjs")
 const gettodopage = async(req, res)=>{
     try {
          const userId = req.userId;
-         if (!userId) {
-           console.log("No user ID found, redirecting to login");
-           return res.redirect("/login");
-         }
          const todos = await todomodel.find({ userId: userId });
          res.render('todo', { todos }); 
     } catch (error) {
@@ -24,9 +20,6 @@ const Addtodo = async(req, res)=>{
 console.log(req.body);  
 try {
   const userId = req.userId;
-  if (!userId) {
-    return res.redirect("/login");
-  }
   const newTodo = await todomodel.create({
     ...req.body,
     userId: userId
@@ -44,9 +37,6 @@ try {
 const deletetodo = async(req,res)=>{
       try {
     const userId = req.userId;
-    if (!userId) {
-      return res.redirect("/login");
-    }
     const todo = await todomodel.findById(req.params.id);
     if (!todo || todo.userId.toString() !== userId.toString()) {
       return res.send("Unauthorized");
@@ -61,9 +51,6 @@ const deletetodo = async(req,res)=>{
  const updatetodo = async(req, res)=>{
   try {
     const userId = req.userId;
-    if (!userId) {
-      return res.redirect("/login");
-    }
     const todo = await todomodel.findById(req.params.id);
     if (!todo || todo.userId.toString() !== userId.toString()) {
       return res.send("Unauthorized");
@@ -85,9 +72,6 @@ const deletetodo = async(req,res)=>{
 const edittodo = async (req, res)=>{
         try {
         const userId = req.userId;
-        if (!userId) {
-          return res.redirect("/login");
-        }
         const todo = await todomodel.findById(req.params.id);
         if (!todo || todo.userId.toString() !== userId.toString()) {
           return res.send("Unauthorized");
@@ -103,9 +87,6 @@ const edittodo = async (req, res)=>{
 const updateedittodo = async (req, res) => {
         try {
         const userId = req.userId;
-        if (!userId) {
-          return res.redirect("/login");
-        }
         const todo = await todomodel.findById(req.params.id);
         if (!todo || todo.userId.toString() !== userId.toString()) {
           return res.send("Unauthorized");

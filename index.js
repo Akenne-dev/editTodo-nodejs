@@ -1,14 +1,26 @@
 const express = require("express")
 const app = express()
 const mongoose = require("mongoose")
+const session = require("express-session")
 require("dotenv").config()
 const connect = require("./Database/db.connect")
 const todorouter = require("./routes/todo.routes")
-const { setCurrentUser, getCurrentUser } = require("./context/userContext")
 
 app.set("view engine", "ejs")
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
+
+// Session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET || "your-secret-key",
+  resave: false,
+  saveUninitialized: true,
+  cookie: { 
+    secure: false,  // Set to true if using HTTPS
+    maxAge: 1000 * 60 * 60 * 24  // 24 hours
+  }
+}))
+
 app.use("/", todorouter)
 
 // CRUD?
@@ -71,17 +83,15 @@ app.get("/home",(req, res)=>{
 
 
 app.get("/signup",(req,res)=>{
-  const user = getCurrentUser();
-  if (user) {
+  if (req.session.userId) {
     return res.redirect("/todo")
   }
   res.render('signup')
 })
 app.get("/dashboard",(req,res)=>{
-  const user = getCurrentUser();
-  if (user) {
-     return res.render('dashboard',{name:user.username})
-
+  if (req.session.userId) {
+     const username = req.session.username
+     return res.render('dashboard',{name: username})
   }
   return res.redirect("/login")
 })
@@ -99,7 +109,8 @@ app.post("/user/signup", async (req, res)=>{
     const newuser = await usermodel.create({ username, email, password })
     console.log(newuser);
     if (newuser) {
-      setCurrentUser(newuser)
+      req.session.userId = newuser._id
+      req.session.username = newuser.username
       return res.redirect("/todo")
     }
     return res.send("error occured")
@@ -117,15 +128,14 @@ app.post("/user/signup", async (req, res)=>{
 })
 
 app.get("/login", (req, res) => {
-  const user = getCurrentUser();
-  if (user) {
+  if (req.session.userId) {
     return res.redirect("/todo")
   }
   res.render('login'); 
 });
 
 app.get("/logout", (req, res) => {
-  setCurrentUser(null);
+  req.session.destroy();
   res.redirect("/login");
 });
 
@@ -148,7 +158,8 @@ app.post("/usersLogin", async (req,res)=>{
 
   
   if (find) {
-    setCurrentUser(find)
+    req.session.userId = find._id
+    req.session.username = find.username
     res.redirect("/todo")
   } else {
     res.send("user not found")
