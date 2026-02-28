@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
 
 // Session middleware with MongoDB store (production) or MemoryStore (development)
-const mongoUrl = process.env.MONGODB_URI
+const mongoUrl = process.env.MONGOURI  // Changed from MONGODB_URI to MONGOURI
 let sessionStore
 
 try {
