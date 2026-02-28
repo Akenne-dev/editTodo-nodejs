@@ -2,49 +2,31 @@ const express = require("express")
 const app = express()
 const mongoose = require("mongoose")
 const session = require("express-session")
-const MongoStore = require("connect-mongo")
 require("dotenv").config()
 const connect = require("./Database/db.connect")
 const todorouter = require("./routes/todo.routes")
+
+console.log("🚀 App starting...")
 
 app.set("view engine", "ejs")
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
 
-// Session middleware with MongoDB store (production) or MemoryStore (development)
-const mongoUrl = process.env.MONGOURI  // Changed from MONGODB_URI to MONGOURI
-let sessionStore
-
-try {
-  if (mongoUrl) {
-    // Use MongoDB store in production
-    sessionStore = new MongoStore({
-      mongoUrl: mongoUrl,
-      touchAfter: 24 * 3600 // lazy session update interval
-    })
-    console.log("✅ Using MongoDB session store")
-  } else {
-    // Use default MemoryStore in development
-    sessionStore = new session.MemoryStore()
-    console.log("⚠️  Using MemoryStore - sessions won't persist across restarts")
-  }
-} catch (error) {
-  console.log("❌ Session store error, falling back to MemoryStore:", error.message)
-  sessionStore = new session.MemoryStore()
-}
-
+// Use simple MemoryStore for sessions
 app.use(session({
-  secret: process.env.SESSION_SECRET || "your-secret-key-change-this",
+  secret: process.env.SESSION_SECRET || "your-secret-key-12345",
   resave: false,
   saveUninitialized: false,
-  store: sessionStore,
+  store: new session.MemoryStore(),
   cookie: { 
-    secure: process.env.NODE_ENV === "production",
+    secure: false,  // Allow http for development
     httpOnly: true,
     sameSite: "lax",
     maxAge: 1000 * 60 * 60 * 24  // 24 hours
   }
 }))
+
+console.log("✅ Session middleware configured")
 
 app.use("/", todorouter)
 
@@ -66,15 +48,14 @@ const usermodel = mongoose.model("user-collection", userSchema)
 
 
 app.get("/",( req,res)=>{
-  try {
-    // If already logged in, go to todos
-    if (req.session && req.session.userId) {
-      return res.redirect("/todo")
-    }
-  } catch (e) {
-    console.log("Session check error on /:", e.message)
+  console.log("📍 GET / - User session:", req.session.userId ? "logged in" : "not logged in")
+  
+  if (req.session && req.session.userId) {
+    console.log("Redirecting logged-in user to /todo")
+    return res.redirect("/todo")
   }
-  // Render signup page directly
+  
+  console.log("Rendering signup page")
   res.render('signup')
 })
 
