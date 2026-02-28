@@ -4,10 +4,15 @@ const {gettodopage,Addtodo,deletetodo, updatetodo, edittodo,updateedittodo} = re
 
 // Middleware to attach userId to request - PROTECTED ROUTE
 const userMiddleware = (req, res, next) => {
-  if (req.session.userId) {
-    req.userId = req.session.userId;
-    next();
-  } else {
+  try {
+    if (req.session && req.session.userId) {
+      req.userId = req.session.userId;
+      next();
+    } else {
+      res.redirect("/login");
+    }
+  } catch (error) {
+    console.error("Session check error:", error);
     res.redirect("/login");
   }
 }

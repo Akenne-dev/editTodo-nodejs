@@ -15,25 +15,33 @@ app.use(express.static("public"))
 const mongoUrl = process.env.MONGODB_URI
 let sessionStore
 
-if (mongoUrl) {
-  // Use MongoDB store in production
-  sessionStore = new MongoStore({
-    mongoUrl: mongoUrl,
-    touchAfter: 24 * 3600 // lazy session update interval
-  })
-} else {
-  // Use default MemoryStore in development (sessions won't persist across restarts)
+try {
+  if (mongoUrl) {
+    // Use MongoDB store in production
+    sessionStore = new MongoStore({
+      mongoUrl: mongoUrl,
+      touchAfter: 24 * 3600 // lazy session update interval
+    })
+    console.log("✅ Using MongoDB session store")
+  } else {
+    // Use default MemoryStore in development
+    sessionStore = new session.MemoryStore()
+    console.log("⚠️  Using MemoryStore - sessions won't persist across restarts")
+  }
+} catch (error) {
+  console.log("❌ Session store error, falling back to MemoryStore:", error.message)
   sessionStore = new session.MemoryStore()
 }
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || "your-secret-key",
+  secret: process.env.SESSION_SECRET || "your-secret-key-change-this",
   resave: false,
   saveUninitialized: false,
   store: sessionStore,
   cookie: { 
-    secure: process.env.NODE_ENV === "production",  // true in production
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
+    sameSite: "lax",
     maxAge: 1000 * 60 * 60 * 24  // 24 hours
   }
 }))
@@ -53,6 +61,11 @@ const usermodel = mongoose.model("user-collection", userSchema)
 
 
 app.get("/",( req,res)=>{
+  // If already logged in, go to todos
+  if (req.session && req.session.userId) {
+    return res.redirect("/todo")
+  }
+  // Otherwise, show signup page
   res.redirect("/signup")
 })
 
@@ -100,13 +113,13 @@ app.get("/home",(req, res)=>{
 
 
 app.get("/signup",(req,res)=>{
-  if (req.session.userId) {
+  if (req.session && req.session.userId) {
     return res.redirect("/todo")
   }
   res.render('signup')
 })
 app.get("/dashboard",(req,res)=>{
-  if (req.session.userId) {
+  if (req.session && req.session.userId) {
      const username = req.session.username
      return res.render('dashboard',{name: username})
   }
