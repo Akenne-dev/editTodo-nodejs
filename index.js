@@ -24,7 +24,7 @@ const usermodel = mongoose.model("user-collection", userSchema)
 
 
 app.get("/",( req,res)=>{
-  res.redirect("/todo")
+  res.redirect("/signup")
 })
 
 let todos = []
@@ -71,6 +71,10 @@ app.get("/home",(req, res)=>{
 
 
 app.get("/signup",(req,res)=>{
+  const user = getCurrentUser();
+  if (user) {
+    return res.redirect("/todo")
+  }
   res.render('signup')
 })
 app.get("/dashboard",(req,res)=>{
@@ -106,13 +110,9 @@ app.post("/user/signup", async (req, res)=>{
 })
 
 app.get("/login", (req, res) => {
-
-  try {
-
-    
-  } catch (error) {
-    console.log(error);
-    
+  const user = getCurrentUser();
+  if (user) {
+    return res.redirect("/todo")
   }
   res.render('login'); 
 });
