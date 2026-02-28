@@ -133,9 +133,8 @@ app.post("/user/signup", async (req, res)=>{
     const newuser = await usermodel.create({ username, email, password })
     console.log(newuser);
     if (newuser) {
-      req.session.userId = newuser._id
-      req.session.username = newuser.username
-      return res.redirect("/todo")
+      console.log("✅ User created successfully, redirecting to login")
+      return res.redirect("/login")
     }
     return res.send("error occured")
     
