@@ -89,18 +89,25 @@ app.get("/dashboard",(req,res)=>{
 app.post("/user/signup", async (req, res)=>{
 
   try {
+    const { username, email, password, confirmPassword } = req.body;
+    
+    if (password !== confirmPassword) {
+      return res.send("Passwords do not match")
+    }
+    
     console.log(req.body);
-    const newuser = await usermodel.create(req.body)
+    const newuser = await usermodel.create({ username, email, password })
     console.log(newuser);
     if (newuser) {
-      return res.redirect("/login")
+      setCurrentUser(newuser)
+      return res.redirect("/todo")
     }
     return res.send("error occured")
     
   } catch (error) {
     console.log(error.message);
     if (error.code == 11000) {
-      return res.send("user already exist")
+      return res.send("Email already exists. Please use a different email or login.")
     }
     if (error.message.includes("user_collection validation failed")) {
             return res.send("All fields are mandatory")
@@ -142,7 +149,7 @@ app.post("/usersLogin", async (req,res)=>{
   
   if (find) {
     setCurrentUser(find)
-    res.redirect("/dashboard")
+    res.redirect("/todo")
   } else {
     res.send("user not found")
   }
