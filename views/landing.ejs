@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Organize Your Life</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #4A3C2E 0%, #6B5D50 50%, #4A3C2E 100%);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            max-height: 100vh;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 40px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-login {
+            padding: 10px 24px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: transparent;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn-signup {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            background: #fff;
+            color: #4A3C2E;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-signup:hover {
+            background: #f0ebe6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 40px;
+            position: relative;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            max-width: 1100px;
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-left {
+            flex: 1;
+            max-width: 520px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 24px;
+        }
+
+        .badge i {
+            font-size: 11px;
+            color: #f6c94e;
+        }
+
+        .hero-left h1 {
+            font-size: clamp(32px, 4vw, 52px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 18px;
+            letter-spacing: -1px;
+        }
+
+        .hero-left h1 span {
+            background: linear-gradient(135deg, #f6c94e, #e8b730);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-left p {
+            font-size: clamp(14px, 1.5vw, 17px);
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.6;
+            margin-bottom: 32px;
+            max-width: 440px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .btn-primary-lg {
+            padding: 14px 32px;
+            background: #fff;
+            color: #4A3C2E;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary-lg:hover {
+            background: #f0ebe6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-secondary-lg {
+            padding: 14px 32px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary-lg:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* ── HERO RIGHT (MOCK CARD) ── */
+        .hero-right {
+            flex: 0 0 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mock-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            width: 340px;
+            padding: 28px;
+            animation: floatCard 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .mock-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .mock-header h3 {
+            color: #2d3748;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .mock-date {
+            font-size: 12px;
+            color: #a0aec0;
+            font-weight: 500;
+        }
+
+        .mock-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+
+        .mock-item:hover {
+            background: #f7fafc;
+        }
+
+        .mock-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .mock-checkbox.checked {
+            background: #4A3C2E;
+            border-color: #4A3C2E;
+        }
+
+        .mock-checkbox.checked i {
+            color: #fff;
+            font-size: 10px;
+        }
+
+        .mock-item-text {
+            flex: 1;
+        }
+
+        .mock-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .mock-item-title.done {
+            text-decoration: line-through;
+            color: #a0aec0;
+        }
+
+        .mock-item-tag {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .tag-work { background: #ebf5ff; color: #3182ce; }
+        .tag-personal { background: #fef3e2; color: #c77c14; }
+        .tag-health { background: #e6ffed; color: #2f855a; }
+
+        .mock-progress {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-label span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #718096;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #edf2f7;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 66%;
+            background: linear-gradient(135deg, #4A3C2E, #6B5D50);
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        /* ── FEATURES ROW ── */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 20px 40px 30px;
+            flex-shrink: 0;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #f6c94e;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ── DECORATIVE ELEMENTS ── */
+        .deco-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+        }
+
+        .deco-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -80px;
+        }
+
+        .deco-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -60px;
+            left: -60px;
+        }
+
+        /* ── RESPONSIVE DESIGN ── */
+
+        /* Large tablets / small desktops */
+        @media (max-width: 1024px) {
+            nav {
+                padding: 14px 24px;
+            }
+
+            .hero-content {
+                gap: 40px;
+            }
+
+            .hero-right {
+                flex: 0 0 300px;
+            }
+
+            .mock-card {
+                width: 280px;
+                padding: 22px;
+            }
+
+            .features {
+                gap: 24px;
+                padding: 16px 24px 24px;
+            }
+        }
+
+        /* Tablets */
+        @media (max-width: 768px) {
+            nav {
+                padding: 12px 20px;
+            }
+
+            .hero {
+                padding: 0 20px;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+            }
+
+            .hero-left {
+                max-width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-left p {
+                max-width: 100%;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-right {
+                flex: 0 0 auto;
+                display: none;
+            }
+
+            .features {
+                gap: 16px;
+                padding: 12px 20px 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .feature {
+                gap: 8px;
+            }
+
+            .feature-text {
+                font-size: 12px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            nav {
+                padding: 10px 16px;
+            }
+
+            .logo-text {
+                font-size: 18px;
+            }
+
+            .logo-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+
+            .btn-login, .btn-signup {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .nav-actions {
+                gap: 8px;
+            }
+
+            .hero {
+                padding: 0 16px;
+            }
+
+            .badge {
+                font-size: 11px;
+                padding: 5px 12px;
+                margin-bottom: 16px;
+            }
+
+            .hero-left h1 {
+                font-size: 28px;
+                margin-bottom: 12px;
+            }
+
+            .hero-left p {
+                font-size: 13px;
+                margin-bottom: 24px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
+            .btn-primary-lg, .btn-secondary-lg {
+                width: 100%;
+                justify-content: center;
+                padding: 13px 24px;
+                font-size: 14px;
+            }
+
+            .features {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 16px 16px;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 360px) {
+            .hero-left h1 {
+                font-size: 24px;
+            }
+
+            .hero-left p {
+                font-size: 12px;
+            }
+
+            .badge {
+                font-size: 10px;
+            }
+        }
+
+        /* Landscape phones */
+        @media (max-height: 500px) {
+            nav {
+                padding: 8px 20px;
+            }
+
+            .badge {
+                margin-bottom: 10px;
+            }
+
+            .hero-left h1 {
+                font-size: 26px;
+                margin-bottom: 8px;
+            }
+
+            .hero-left p {
+                font-size: 13px;
+                margin-bottom: 16px;
+                line-height: 1.4;
+            }
+
+            .btn-primary-lg, .btn-secondary-lg {
+                padding: 10px 24px;
+                font-size: 13px;
+            }
+
+            .mock-card {
+                padding: 16px;
+                width: 240px;
+            }
+
+            .mock-item {
+                padding: 8px 10px;
+                margin-bottom: 4px;
+            }
+
+            .features {
+                padding: 8px 20px 12px;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- DECORATIVE -->
+    <div class="deco-circle deco-1"></div>
+    <div class="deco-circle deco-2"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="/" class="logo">
+            <div class="logo-icon">
+                <i class="fa-solid fa-check-double"></i>
+            </div>
+            <span class="logo-text">TaskFlow</span>
+        </a>
+        <div class="nav-actions">
+            <a href="/login" class="btn-login">Log In</a>
+            <a href="/signup" class="btn-signup">Sign Up Free</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-left">
+                <div class="badge">
+                    <i class="fa-solid fa-bolt"></i>
+                    Trusted by productive people everywhere
+                </div>
+                <h1>Organize your tasks, <span>simplify your life.</span></h1>
+                <p>A clean, powerful todo app that helps you stay focused, prioritize what matters, and get things done — effortlessly.</p>
+                <div class="hero-buttons">
+                    <a href="/signup" class="btn-primary-lg">
+                        Get Started Free
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="/login" class="btn-secondary-lg">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Sign In
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <div class="mock-card">
+                    <div class="mock-header">
+                        <h3>My Tasks</h3>
+                        <span class="mock-date">Today</span>
+                    </div>
+
+                    <div class="mock-item">
+                        <div class="mock-checkbox checked">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div class="mock-item-text">
+                            <div class="mock-item-title done">Design landing page</div>
+                            <span class="mock-item-tag tag-work">Work</span>
+                        </div>
+                    </div>
+
+                    <div class="mock-item">
+                        <div class="mock-checkbox checked">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div class="mock-item-text">
+                            <div class="mock-item-title done">Review pull requests</div>
+                            <span class="mock-item-tag tag-work">Work</span>
+                        </div>
+                    </div>
+
+                    <div class="mock-item">
+                        <div class="mock-checkbox"></div>
+                        <div class="mock-item-text">
+                            <div class="mock-item-title">Evening workout</div>
+                            <span class="mock-item-tag tag-health">Health</span>
+                        </div>
+                    </div>
+
+                    <div class="mock-item">
+                        <div class="mock-checkbox"></div>
+                        <div class="mock-item-text">
+                            <div class="mock-item-title">Read 30 pages</div>
+                            <span class="mock-item-tag tag-personal">Personal</span>
+                        </div>
+                    </div>
+
+                    <div class="mock-progress">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>2 / 4 done</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <div class="features">
+        <div class="feature">
+            <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+            <span class="feature-text">Secure & Private</span>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+            <span class="feature-text">Lightning Fast</span>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><i class="fa-solid fa-cloud"></i></div>
+            <span class="feature-text">Cloud Synced</span>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+            <span class="feature-text">Works Everywhere</span>
+        </div>
+    </div>
+
+</body>
+</html>

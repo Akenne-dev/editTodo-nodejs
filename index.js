@@ -55,8 +55,8 @@ app.get("/",( req,res)=>{
     return res.redirect("/todo")
   }
   
-  console.log("Rendering signup page")
-  res.render('signup')
+  console.log("Rendering landing page")
+  res.render('landing')
 })
 
 let todos = []
@@ -201,6 +201,22 @@ app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500).send("Something went wrong: " + err.message)
 })
+
+// Self-ping to keep Render free tier awake (every 14 minutes)
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL // Render sets this automatically
+if (RENDER_URL) {
+  const https = require("https")
+  const http = require("http")
+  setInterval(() => {
+    const lib = RENDER_URL.startsWith("https") ? https : http
+    lib.get(`${RENDER_URL}/health`, (res) => {
+      console.log(`🏓 Self-ping: ${res.statusCode}`)
+    }).on("error", (err) => {
+      console.log("🏓 Self-ping failed:", err.message)
+    })
+  }, 14 * 60 * 1000) // Every 14 minutes
+  console.log("🏓 Self-ping enabled to keep service awake")
+}
 
 // Start server
 connect()
