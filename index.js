@@ -6,11 +6,14 @@ require("dotenv").config()
 const connect = require("./Database/db.connect")
 const todorouter = require("./routes/todo.routes")
 
+const path = require("path")
+
 console.log("🚀 App starting...")
 
 app.set("view engine", "ejs")
+app.set("views", path.join(__dirname, "views"))
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static("public"))
+app.use(express.static(path.join(__dirname, "public")))
 
 // Use simple MemoryStore for sessions
 app.use(session({
