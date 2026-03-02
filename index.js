@@ -226,6 +226,9 @@ console.log(`server is on port ${port}`);
 
 })
 
+// Export for Vercel serverless
+module.exports = app
+
 
 
 
